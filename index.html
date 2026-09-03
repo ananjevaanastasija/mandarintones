@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Tone Draw</title>
+<script>
+  // Set theme before first paint to avoid a flash of the wrong mode.
+  (function(){
+    var m = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', m ? 'dark' : 'light');
+  })();
+</script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ SETUP SCREEN ============ -->
+  <section id="setup">
+    <div class="topbar">
+      <span class="title">Tone Draw</span>
+      <button class="iconbtn" id="themeToggleSetup" aria-label="Toggle theme"></button>
+    </div>
+
+    <div class="setup-hero">
+      <h1>Practice pinyin tones</h1>
+      <p>See a word, draw its pitch contour, check yourself.</p>
+    </div>
+
+    <div id="loadFallback" class="load-fallback" style="display:none;">
+      <p>words.json couldn't be loaded automatically — this happens when opening this file directly instead of through a local server. Select it manually:</p>
+      <input type="file" id="fileInput" accept="application/json">
+    </div>
+
+    <div class="section-label">Choose a topic</div>
+    <div class="chips" id="topicChips"></div>
+
+    <div class="pref-row">
+      <span>Always show meaning</span>
+      <button class="switch" id="alwaysMeaningToggle" role="switch" aria-checked="false" aria-label="Always show meaning">
+        <span class="knob"></span>
+      </button>
+    </div>
+
+    <button class="start-btn" id="startBtn" disabled>Loading words…</button>
+    <div class="setup-count" id="setupCount"></div>
+  </section>
+
+  <!-- ============ PRACTICE SCREEN ============ -->
+  <section id="practice">
+    <div class="topbar">
+      <button class="topic-pill-btn" id="topicPillBtn">
+        <span id="topicPillLabel">All topics</span>
+        <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="score-tag">score <b id="scoreVal">0/0</b></span>
+        <button class="iconbtn" id="themeTogglePractice" aria-label="Toggle theme"></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hanzi" id="hanzi"></div>
+      <div class="pinyin-toneless" id="pinyinToneless"></div>
+      <div class="meaning" id="meaning"></div>
+
+      <div class="canvas-wrap">
+        <canvas id="canvas"></canvas>
+        <div class="result-stamp" id="resultStamp"></div>
+      </div>
+
+      <div class="controls">
+        <button class="action btn-clear" id="clearBtn">Clear</button>
+        <button class="action btn-check" id="checkBtn">Check</button>
+        <button class="action btn-next" id="nextBtn">Next</button>
+      </div>
+      <div class="feedback-line" id="feedbackLine">Draw the pitch, then check.</div>
+    </div>
+
+    <footer>
+      <button class="ref-link" id="refBtn">Tone shapes reference</button>
+    </footer>
+  </section>
+
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h2>The five tones</h2>
+    <div class="sub">Draw left to right · bottom = low pitch, top = high pitch</div>
+    <div id="shapeList"></div>
+    <button class="modal-close" id="modalCloseBtn">Close</button>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
