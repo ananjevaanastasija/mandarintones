@@ -50,10 +50,16 @@
   .topbar{ display:flex; align-items:center; justify-content:space-between; padding:6px 2px 18px; }
   .title{ font-size:20px; font-weight:700; letter-spacing:-0.02em; }
   .iconbtn{
-    width:36px; height:36px; border-radius:50%; border:none; background:var(--chip-bg);
+    position:relative; width:36px; height:36px; border-radius:50%; border:none; background:var(--chip-bg);
     display:flex; align-items:center; justify-content:center; color:var(--text); cursor:pointer;
   }
   .iconbtn svg{ width:18px; height:18px; }
+  .badge-count{
+    position:absolute; top:-2px; right:-2px; min-width:16px; height:16px; padding:0 4px;
+    border-radius:100px; background:var(--danger); color:#fff; font-size:10px; font-weight:700;
+    display:none; align-items:center; justify-content:center; line-height:1; font-family:var(--font);
+    box-shadow:0 0 0 2px var(--bg);
+  }
 
   /* ---------- setup screen ---------- */
   #setup{ display:flex; flex-direction:column; }
@@ -103,8 +109,24 @@
     background:var(--card); border:1px solid var(--border); border-radius:var(--radius-md);
     padding:16px; margin-bottom:20px;
   }
-  .load-fallback p{ margin:0 0 12px; font-size:13.5px; color:var(--text-secondary); line-height:1.4; }
-  .load-fallback input[type=file]{ font-family:var(--font); font-size:13px; color:var(--text); }
+  .load-fallback p{ margin:0; font-size:13.5px; color:var(--text-secondary); line-height:1.4; }
+
+  .wordlist-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:14px 16px; margin-bottom:14px;
+  }
+  .wordlist-info{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .wordlist-info .name{
+    font-size:15px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .wordlist-info .sub{ font-size:12.5px; color:var(--text-secondary); }
+  .wordlist-btn{
+    flex-shrink:0; border:none; border-radius:var(--radius-sm); padding:9px 14px;
+    background:var(--chip-bg); color:var(--text); font-weight:600; font-size:13.5px;
+    cursor:pointer; font-family:var(--font);
+  }
+  .wordlist-btn:active{ opacity:.8; }
 
   /* ---------- practice screen ---------- */
   #practice{ display:none; }
@@ -198,3 +220,57 @@
     margin-top:14px; width:100%; padding:13px; border-radius:var(--radius-md); border:none;
     background:var(--chip-bg); color:var(--text); font-weight:600; cursor:pointer; font-family:var(--font); font-size:15px;
   }
+
+  /* ---------- dictionary ---------- */
+  .dict-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.4); display:none;
+    align-items:flex-end; justify-content:center; z-index:60;
+  }
+  .dict-overlay.open{ display:flex; }
+  .dict-sheet{
+    background:var(--card); border-radius:22px 22px 0 0; padding:18px 16px 16px;
+    max-width:480px; width:100%; height:92vh; display:flex; flex-direction:column;
+  }
+  .dict-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .dict-header h2{ font-size:19px; font-weight:700; margin:0; }
+  .dict-header .iconbtn{ font-size:15px; }
+  .dict-search{
+    width:100%; padding:11px 14px; border-radius:var(--radius-md); border:1px solid var(--border);
+    background:var(--card-2); color:var(--text); font-family:var(--font); font-size:14.5px; margin-bottom:12px;
+  }
+  .dict-search:focus{ outline:none; border-color:var(--accent); }
+  #dictTopics{ margin-bottom:12px; }
+  .dict-sort-row{ display:flex; gap:8px; margin-bottom:10px; }
+  .dict-sort-select{
+    flex:1; min-width:0; padding:9px 10px; border-radius:var(--radius-sm); border:1px solid var(--border);
+    background:var(--card-2); color:var(--text); font-family:var(--font); font-size:12.5px;
+  }
+  .dict-sort-dir, .dict-reset{
+    border:none; border-radius:var(--radius-sm); background:var(--chip-bg); color:var(--text);
+    font-weight:600; cursor:pointer; font-family:var(--font); font-size:13px; padding:9px 12px; flex-shrink:0;
+  }
+  .dict-summary{ font-size:12.5px; color:var(--text-secondary); margin-bottom:8px; }
+  .dict-list{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  .dict-section-header{
+    position:sticky; top:0; background:var(--card); font-size:12px; font-weight:700;
+    text-transform:uppercase; letter-spacing:.04em; color:var(--text-secondary); padding:10px 4px 6px;
+  }
+  .dict-row{
+    display:flex; align-items:center; gap:12px; padding:10px 4px; border-bottom:1px solid var(--border);
+    cursor:pointer;
+  }
+  .dict-row:active{ background:var(--card-2); }
+  .dict-char{ font-size:26px; font-weight:700; flex-shrink:0; width:44px; text-align:center; }
+  .dict-main{ flex:1; min-width:0; }
+  .dict-pinyin{ font-size:14px; font-weight:600; color:var(--text); }
+  .dict-trans{ font-size:12.5px; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .dict-meta-col{ display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+  .dict-topic-tag, .dict-type-tag{
+    font-size:10.5px; font-weight:600; padding:3px 8px; border-radius:100px; background:var(--chip-bg);
+    color:var(--text-secondary); white-space:nowrap;
+  }
+  .dict-badge{
+    font-size:10px; font-weight:700; padding:3px 8px; border-radius:100px; background:var(--accent);
+    color:var(--accent-contrast); white-space:nowrap;
+  }
+  .dict-empty{ text-align:center; padding:40px 20px; color:var(--text-secondary); font-size:14px; }

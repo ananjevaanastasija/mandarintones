@@ -47,8 +47,8 @@ ma mo me mai mei mao mou man men mang meng mi mie miao miu mian min ming mu
 fa fo fei fou fan fen fang feng fu
 da de dai dei dao dou dan den dang deng dong di die diao diu dian ding du duo dui duan dun
 ta te tai tao tou tan tang teng tong ti tie tiao tian ting tu tuo tui tuan tun
-na ne nai nei nao nou nan nen nang neng nong ni nie niao niu nian nin niang ning nu nuo nuan nun nv nve
-la le lai lei lao lou lan lang leng long li lia lie liao liu lian lin liang ling lu luo luan lun lv lve
+na ne nai nei nao nou nan nen nang neng nong ni nie niao niu nian nin niang ning nu nuo nuan nun nü nüe nv nve
+la le lai lei lao lou lan lang leng long li lia lie liao liu lian lin liang ling lu luo luan lun lü lüe lv lve
 ga ge gai gei gao gou gan gen gang geng gong gu gua guo guai gui guan gun guang
 ka ke kai kei kao kou kan ken kang keng kong ku kua kuo kuai kui kuan kun kuang
 ha he hai hei hao hou han hen hang heng hong hu hua huo huai hui huan hun huang
@@ -66,14 +66,13 @@ ya ye yao you yan yang yin ying yong yi yu yue yuan yun yo
 wa wo wai wei wan wang wen weng wu
 `.trim().split(/\s+/));
 
-/* Split a run of concatenated pinyin (no spaces) into `count` syllables,
-   one per character. Works on the tone-marked string directly: matches
-   are found on a toneless copy, then the same character offsets are cut
-   out of the original tone-marked string, so tone marks are preserved. */
-function splitConcatenatedPinyin(pinyinRaw, count){
-  const raw = (pinyinRaw || "").trim();
-  if(!raw || count < 1) return null;
-  const chars = Array.from(raw);
+/* Core: split an already-cleaned (no separators, tone marks intact)
+   pinyin string into exactly `count` syllables, using the table above
+   to find valid cut points. Returns an array of tone-marked substrings,
+   or null if no valid split into that many syllables exists. */
+function splitCleanedPinyin(cleaned, count){
+  if(!cleaned || count < 1) return null;
+  const chars = Array.from(cleaned);
   const baseStr = chars.map(baseCharOf).join('').toLowerCase();
   const n = baseStr.length;
 
@@ -108,6 +107,36 @@ function splitConcatenatedPinyin(pinyinRaw, count){
   return syllables;
 }
 
+/* Split a run of concatenated pinyin (no spaces) into `count` syllables,
+   one per character. Works on the tone-marked string directly: matches
+   are found on a toneless copy, then the same character offsets are cut
+   out of the original tone-marked string, so tone marks are preserved.
+   Separator marks some pinyin sources include between syllables — a
+   syllable-boundary apostrophe (Xī'ān), a hyphen, a middle dot, or extra
+   whitespace — are stripped first since they aren't part of any
+   syllable and would otherwise block matching. */
+function splitConcatenatedPinyin(pinyinRaw, count){
+  const cleaned = (pinyinRaw || "").normalize('NFC').replace(/[\s'\u2019\u02bc\-\u00b7]/g, "");
+  if(!cleaned || count < 1) return null;
+
+  const direct = splitCleanedPinyin(cleaned, count);
+  if(direct) return direct;
+
+  // Erhua (儿化) fallback: a trailing 儿 often merges into the previous
+  // syllable's pronunciation instead of being its own syllable (huār,
+  // not "hua er"), so the pinyin has one fewer syllable than characters.
+  // If stripping a trailing "r" lets the rest split into count-1 valid
+  // syllables, treat the final character as an attached, neutral-tone
+  // suffix rather than failing the whole word.
+  if(count > 1 && /r$/i.test(cleaned)){
+    const withoutTrailingR = cleaned.slice(0, -1);
+    const rest = splitCleanedPinyin(withoutTrailingR, count - 1);
+    if(rest) return [...rest, 'r'];
+  }
+
+  return null;
+}
+
 function toEntry(raw){
   const chars = Array.from(raw.word || "");
   let syllables = (raw.pinyin || "").trim().split(/\s+/).filter(Boolean);
@@ -124,6 +153,7 @@ function toEntry(raw){
     syllables,
     translation: raw.translation || "",
     topic: raw.topic || "other",
+    type: raw.type || "",
   };
   entry.tones = entry.syllables.map(toneOfSyllable);
   entry.toneless = entry.syllables.map(stripTone);
@@ -136,11 +166,15 @@ async function loadWords(){
     const res = await fetch('words.json');
     if(!res.ok) throw new Error('bad response');
     const raw = await res.json();
-    onWordsLoaded(raw);
+    onWordsLoaded(raw, 'words.json');
   }catch(e){
     document.getElementById('loadFallback').style.display = 'block';
+    els.wordlistName.textContent = 'No word list loaded';
+    els.wordlistSub.textContent = 'Choose a JSON file to begin';
   }
 }
+
+document.getElementById('chooseFileBtn').addEventListener('click', ()=> document.getElementById('fileInput').click());
 document.getElementById('fileInput').addEventListener('change', e=>{
   const file = e.target.files[0];
   if(!file) return;
@@ -148,21 +182,29 @@ document.getElementById('fileInput').addEventListener('change', e=>{
   reader.onload = ev=>{
     try{
       const raw = JSON.parse(ev.target.result);
-      onWordsLoaded(raw);
+      if(!Array.isArray(raw)) throw new Error('not an array');
+      onWordsLoaded(raw, file.name);
       document.getElementById('loadFallback').style.display = 'none';
     }catch(err){
-      alert('That file could not be read as valid JSON.');
+      alert('That file could not be read as a word-list JSON array.');
+    }finally{
+      // Allow re-selecting the same file later (e.g. after editing it).
+      els.fileInput.value = '';
     }
   };
   reader.readAsText(file);
 });
 
-function onWordsLoaded(raw){
+function onWordsLoaded(raw, sourceName){
   WORDS = raw.map(toEntry).filter(w => w.word && w.syllables.length);
-  els.startBtn.disabled = false;
-  els.startBtn.textContent = 'Start practicing';
+  els.startBtn.disabled = WORDS.length === 0;
+  els.startBtn.textContent = WORDS.length ? 'Start practicing' : 'No valid words found';
+  els.wordlistName.textContent = sourceName || 'Custom word list';
+  els.wordlistSub.textContent = `${WORDS.length} word${WORDS.length===1?'':'s'} loaded`;
+  selectedChipTopic = 'all';
   buildTopicChips();
   updateSetupCount();
+  updateReviewBadge();
 }
 
 const TONE_DESCRIPTIONS = {
@@ -204,12 +246,71 @@ let score = { correct:0, total:0 };
 let lastWordIndex = -1;
 let alwaysShowMeaning = false;
 try{ alwaysShowMeaning = localStorage.getItem('toneDraw.alwaysShowMeaning') === '1'; }catch(e){}
+let practiceUnknownOnly = false;
+try{ practiceUnknownOnly = localStorage.getItem('toneDraw.practiceUnknownOnly') === '1'; }catch(e){}
+let hadMistakeInRound = false; // any wrong character so far in the current word
+
+/* ---------------------------------------------------------------------
+   "Words I don't know" tracking. A word is flagged the moment any
+   character in it is drawn wrong. It stays flagged — and keeps a
+   streak of clean (all-correct) completions — until that streak
+   reaches 10, at which point it's considered learned and dropped.
+   Persisted to localStorage so progress survives a reload.
+--------------------------------------------------------------------- */
+const MASTERY_STREAK = 10;
+function wordKey(w){ return w.word + '::' + w.syllables.join(''); }
+function loadPracticeList(){
+  try{ return JSON.parse(localStorage.getItem('toneDraw.practice') || '{}'); }catch(e){ return {}; }
+}
+let practiceList = loadPracticeList(); // { [wordKey]: cleanStreakCount }
+function savePracticeList(){
+  try{ localStorage.setItem('toneDraw.practice', JSON.stringify(practiceList)); }catch(e){}
+}
+function isFlagged(key){ return Object.prototype.hasOwnProperty.call(practiceList, key); }
+function markMistake(key){
+  practiceList[key] = 0;
+  savePracticeList();
+  updateReviewBadge();
+}
+function markWordCleanRound(key){
+  if(!isFlagged(key)) return; // only words already flagged are tracked toward mastery
+  practiceList[key]++;
+  if(practiceList[key] >= MASTERY_STREAK) delete practiceList[key];
+  savePracticeList();
+  updateReviewBadge();
+}
 
 const els = {
   topicChips: document.getElementById('topicChips'),
   setupCount: document.getElementById('setupCount'),
   startBtn: document.getElementById('startBtn'),
   alwaysMeaningToggle: document.getElementById('alwaysMeaningToggle'),
+  practiceUnknownToggle: document.getElementById('practiceUnknownToggle'),
+  dictBtn: document.getElementById('dictBtn'),
+  dictOverlay: document.getElementById('dictOverlay'),
+  dictCloseBtn: document.getElementById('dictCloseBtn'),
+  dictSearch: document.getElementById('dictSearch'),
+  dictTopics: document.getElementById('dictTopics'),
+  dictSortSelect: document.getElementById('dictSortSelect'),
+  dictSortDir: document.getElementById('dictSortDir'),
+  dictReset: document.getElementById('dictReset'),
+  dictSummary: document.getElementById('dictSummary'),
+  dictList: document.getElementById('dictList'),
+  reviewBtn: document.getElementById('reviewBtn'),
+  reviewBadge: document.getElementById('reviewBadge'),
+  reviewOverlay: document.getElementById('reviewOverlay'),
+  reviewCloseBtn: document.getElementById('reviewCloseBtn'),
+  reviewSearch: document.getElementById('reviewSearch'),
+  reviewTopics: document.getElementById('reviewTopics'),
+  reviewSortSelect: document.getElementById('reviewSortSelect'),
+  reviewSortDir: document.getElementById('reviewSortDir'),
+  reviewReset: document.getElementById('reviewReset'),
+  reviewSummary: document.getElementById('reviewSummary'),
+  reviewList: document.getElementById('reviewList'),
+  wordlistName: document.getElementById('wordlistName'),
+  wordlistSub: document.getElementById('wordlistSub'),
+  chooseFileBtn: document.getElementById('chooseFileBtn'),
+  fileInput: document.getElementById('fileInput'),
   topicPillBtn: document.getElementById('topicPillBtn'),
   topicPillLabel: document.getElementById('topicPillLabel'),
   hanzi: document.getElementById('hanzi'),
@@ -237,7 +338,11 @@ function escapeHtml(s){
    Setup screen: topic chips
 --------------------------------------------------------------------- */
 function topicLabel(t){ return t === 'all' ? 'All topics' : t.charAt(0).toUpperCase() + t.slice(1); }
-function poolForTopic(t){ return t === "all" ? WORDS : WORDS.filter(w=>w.topic===t); }
+function poolForTopic(t){
+  let pool = t === "all" ? WORDS : WORDS.filter(w=>w.topic===t);
+  if(practiceUnknownOnly) pool = pool.filter(w => isFlagged(wordKey(w)));
+  return pool;
+}
 
 function buildTopicChips(){
   const topics = ["all", ...Array.from(new Set(WORDS.map(w=>w.topic))).sort()];
@@ -256,7 +361,27 @@ function buildTopicChips(){
 }
 function updateSetupCount(){
   const n = poolForTopic(selectedChipTopic).length;
-  els.setupCount.textContent = `${n} word${n===1?'':'s'} in this set`;
+  els.setupCount.textContent = (practiceUnknownOnly && n === 0)
+    ? "No words to review right now — nice work!"
+    : `${n} word${n===1?'':'s'} in this set`;
+  if(WORDS.length > 0){
+    els.startBtn.disabled = n === 0;
+    els.startBtn.textContent = n === 0 ? 'No words to practice' : 'Start practicing';
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Preference: only practice words currently flagged as not-yet-known.
+--------------------------------------------------------------------- */
+function renderPracticeUnknownToggle(){
+  els.practiceUnknownToggle.classList.toggle('on', practiceUnknownOnly);
+  els.practiceUnknownToggle.setAttribute('aria-checked', String(practiceUnknownOnly));
+}
+function setPracticeUnknownOnly(v){
+  practiceUnknownOnly = v;
+  try{ localStorage.setItem('toneDraw.practiceUnknownOnly', v ? '1' : '0'); }catch(e){}
+  renderPracticeUnknownToggle();
+  updateSetupCount();
 }
 
 /* ---------------------------------------------------------------------
@@ -308,6 +433,279 @@ function buildShapeReference(){
 }
 
 /* ---------------------------------------------------------------------
+   Dictionary — browse every loaded word, search/filter/sort it, and
+   jump straight into practicing any single entry. Adapted from the
+   existing dictionary.js module to work with this app's plain word
+   entries (word/syllables/tones/toneless/translation/topic/type)
+   instead of a separate app-state store.
+--------------------------------------------------------------------- */
+let dictQuery   = '';
+let dictTopic   = 'All';
+let dictSort    = 'word';
+let dictSortAsc = true;
+
+const TONE_NAME = {1:'1st',2:'2nd',3:'3rd',4:'4th',5:'neutral'};
+function toneLabel(key){
+  if(key === 'No tones' || key === 'Other') return key;
+  return key.split(' ').map(n => TONE_NAME[n] || n).join(' + ');
+}
+function generateAllToneCombinations(maxLen){
+  const combos = [];
+  (function rec(prefix, depth){
+    if(depth > 0) combos.push(prefix.slice());
+    if(depth === maxLen) return;
+    for(let t=1; t<=5; t++){ prefix.push(t); rec(prefix, depth+1); prefix.pop(); }
+  })([], 0);
+  return combos;
+}
+function sortToneGroups(groups){
+  const rank = g => {
+    if(g.key === 'No tones') return [9999];
+    if(g.key === 'Other') return [10000];
+    return g.key.split(' ').map(Number);
+  };
+  return groups.slice().sort((a,b)=>{
+    const ra = rank(a), rb = rank(b);
+    const len = Math.max(ra.length, rb.length);
+    for(let i=0; i<len; i++){
+      const av = ra[i] ?? -1, bv = rb[i] ?? -1;
+      if(av !== bv) return av - bv;
+    }
+    return 0;
+  });
+}
+
+function buildDictTopics(){
+  const topics = ['All', ...Array.from(new Set(WORDS.map(w=>w.topic))).sort()];
+  els.dictTopics.innerHTML = '';
+  topics.forEach(t=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (dictTopic === t ? ' selected' : '');
+    btn.textContent = t === 'All' ? 'All' : topicLabel(t);
+    btn.addEventListener('click', ()=>{
+      dictTopic = t;
+      buildDictTopics();
+      renderDict();
+    });
+    els.dictTopics.appendChild(btn);
+  });
+}
+
+function groupByTone(words){
+  const buckets = {};
+  generateAllToneCombinations(4).forEach(c => { buckets[c.join(' ')] = []; });
+  buckets['No tones'] = [];
+
+  words.forEach(w=>{
+    const tones = w.tones || [];
+    if(tones.length === 0){ buckets['No tones'].push(w); return; }
+    const k = tones.join(' ');
+    if(k in buckets) buckets[k].push(w);
+    else{ if(!buckets['Other']) buckets['Other'] = []; buckets['Other'].push(w); }
+  });
+
+  const groups = Object.entries(buckets)
+    .filter(([,ws]) => ws.length > 0)
+    .map(([key, ws]) => ({ key, words: ws.slice().sort((a,b)=> a.word < b.word ? -1 : 1) }));
+
+  return sortToneGroups(groups);
+}
+
+function groupByType(words){
+  const map = {};
+  words.forEach(w=>{
+    const t = w.type || 'Uncategorized';
+    if(!map[t]) map[t] = [];
+    map[t].push(w);
+  });
+  return Object.entries(map)
+    .map(([key, ws]) => ({ key, words: ws.slice().sort((a,b)=> a.word < b.word ? -1 : 1) }))
+    .sort((a,b)=> a.key < b.key ? -1 : 1);
+}
+
+function sortWordsBy(words, sortKey, asc){
+  return words.slice().sort((a,b)=>{
+    let cmp = 0;
+    if(sortKey === 'word')             cmp = a.word < b.word ? -1 : 1;
+    else if(sortKey === 'pinyin')      cmp = a.syllables.join(' ') < b.syllables.join(' ') ? -1 : 1;
+    else if(sortKey === 'translation') cmp = a.translation < b.translation ? -1 : 1;
+    return asc ? cmp : -cmp;
+  });
+}
+
+function makeDictRow(w){
+  const key = wordKey(w);
+  const flagged = isFlagged(key);
+  const row = document.createElement('div');
+  row.className = 'dict-row';
+  row.innerHTML = `
+    <div class="dict-char">${escapeHtml(w.word)}</div>
+    <div class="dict-main">
+      <div class="dict-pinyin">${escapeHtml(w.syllables.join(' '))}</div>
+      <div class="dict-trans">${escapeHtml(w.translation)}</div>
+    </div>
+    <div class="dict-meta-col">
+      <div class="dict-topic-tag">${escapeHtml(topicLabel(w.topic))}</div>
+      ${w.type ? `<div class="dict-type-tag">${escapeHtml(w.type)}</div>` : ''}
+      ${flagged ? `<div class="dict-badge">learning · ${practiceList[key]||0}/${MASTERY_STREAK}</div>` : ''}
+    </div>
+  `;
+  row.addEventListener('click', ()=> practiceSingleWord(w));
+  return row;
+}
+
+/* Shared list renderer used by both the Dictionary and the Review-list
+   pages: same sorting/grouping (by character, pinyin, meaning, tone
+   pattern, or word type), just fed a different word set and pointed at
+   different DOM elements/state. */
+function renderWordListInto({ words, sort, sortAsc, listEl, summaryEl, allWordsCount, emptyText }){
+  const total = words.length;
+  listEl.innerHTML = '';
+
+  if(total === 0){
+    listEl.innerHTML = `<div class="dict-empty">${escapeHtml(emptyText || 'No words found')}</div>`;
+    summaryEl.textContent = 'No results';
+    return;
+  }
+
+  if(sort === 'tone'){
+    const groups = groupByTone(words);
+    groups.forEach(g=>{
+      const hdr = document.createElement('div');
+      hdr.className = 'dict-section-header';
+      const display = (g.key === 'No tones' || g.key === 'Other') ? g.key :
+        (g.key.includes(' ') ? 'Tones ' : 'Tone ') + toneLabel(g.key);
+      hdr.textContent = `${display}  (${g.words.length})`;
+      listEl.appendChild(hdr);
+      g.words.forEach(w => listEl.appendChild(makeDictRow(w)));
+    });
+    summaryEl.textContent = `${total} word${total===1?'':'s'} in ${groups.length} tone pattern${groups.length===1?'':'s'}`;
+
+  }else if(sort === 'type'){
+    const groups = groupByType(words);
+    groups.forEach(g=>{
+      const hdr = document.createElement('div');
+      hdr.className = 'dict-section-header';
+      hdr.textContent = `${g.key}  (${g.words.length})`;
+      listEl.appendChild(hdr);
+      g.words.forEach(w => listEl.appendChild(makeDictRow(w)));
+    });
+    summaryEl.textContent = `${total} word${total===1?'':'s'} in ${groups.length} type${groups.length===1?'':'s'}`;
+
+  }else{
+    sortWordsBy(words, sort, sortAsc).forEach(w => listEl.appendChild(makeDictRow(w)));
+    summaryEl.textContent = allWordsCount != null
+      ? `Showing ${total} of ${allWordsCount} words`
+      : `${total} word${total===1?'':'s'}`;
+  }
+}
+
+function renderDict(){
+  const words = WORDS.filter(w=>{
+    if(dictTopic !== 'All' && w.topic !== dictTopic) return false;
+    if(dictQuery){
+      const s = dictQuery.toLowerCase();
+      return w.word.toLowerCase().includes(s)               ||
+             w.syllables.join(' ').toLowerCase().includes(s) ||
+             w.toneless.join(' ').toLowerCase().includes(s)  ||
+             w.translation.toLowerCase().includes(s)         ||
+             w.topic.toLowerCase().includes(s)                ||
+             (w.type||'').toLowerCase().includes(s);
+    }
+    return true;
+  });
+
+  renderWordListInto({
+    words, sort: dictSort, sortAsc: dictSortAsc,
+    listEl: els.dictList, summaryEl: els.dictSummary,
+    allWordsCount: WORDS.length,
+  });
+}
+
+function openDict(){
+  buildDictTopics();
+  renderDict();
+  els.dictOverlay.classList.add('open');
+}
+function closeDict(){
+  els.dictOverlay.classList.remove('open');
+}
+
+/* ---------------------------------------------------------------------
+   Review list — every word currently flagged as "not known yet",
+   sortable/groupable exactly like the dictionary above.
+--------------------------------------------------------------------- */
+let reviewQuery   = '';
+let reviewTopic   = 'All';
+let reviewSort    = 'word';
+let reviewSortAsc = true;
+
+function flaggedWords(){ return WORDS.filter(w => isFlagged(wordKey(w))); }
+
+function updateReviewBadge(){
+  const n = flaggedWords().length;
+  if(n > 0){
+    els.reviewBadge.textContent = n > 99 ? '99+' : String(n);
+    els.reviewBadge.style.display = 'flex';
+  }else{
+    els.reviewBadge.style.display = 'none';
+  }
+}
+
+function buildReviewTopics(){
+  const pool = flaggedWords();
+  const topics = ['All', ...Array.from(new Set(pool.map(w=>w.topic))).sort()];
+  els.reviewTopics.innerHTML = '';
+  topics.forEach(t=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (reviewTopic === t ? ' selected' : '');
+    btn.textContent = t === 'All' ? 'All' : topicLabel(t);
+    btn.addEventListener('click', ()=>{
+      reviewTopic = t;
+      buildReviewTopics();
+      renderReview();
+    });
+    els.reviewTopics.appendChild(btn);
+  });
+}
+
+function renderReview(){
+  const pool = flaggedWords();
+  const words = pool.filter(w=>{
+    if(reviewTopic !== 'All' && w.topic !== reviewTopic) return false;
+    if(reviewQuery){
+      const s = reviewQuery.toLowerCase();
+      return w.word.toLowerCase().includes(s)               ||
+             w.syllables.join(' ').toLowerCase().includes(s) ||
+             w.toneless.join(' ').toLowerCase().includes(s)  ||
+             w.translation.toLowerCase().includes(s)         ||
+             w.topic.toLowerCase().includes(s)                ||
+             (w.type||'').toLowerCase().includes(s);
+    }
+    return true;
+  });
+
+  renderWordListInto({
+    words, sort: reviewSort, sortAsc: reviewSortAsc,
+    listEl: els.reviewList, summaryEl: els.reviewSummary,
+    allWordsCount: pool.length,
+    emptyText: pool.length === 0
+      ? "You don't have any words to review right now — nice work!"
+      : 'No words found',
+  });
+}
+
+function openReview(){
+  if(reviewTopic !== 'All' && !flaggedWords().some(w => w.topic === reviewTopic)) reviewTopic = 'All';
+  buildReviewTopics();
+  renderReview();
+  els.reviewOverlay.classList.add('open');
+}
+function closeReview(){
+  els.reviewOverlay.classList.remove('open');
+}
+
+/* ---------------------------------------------------------------------
    Word selection + rendering
 --------------------------------------------------------------------- */
 function pickWord(){
@@ -337,6 +735,7 @@ function renderWord(w){
   currentIdx = 0;
   results = new Array(syllables.length).fill(null);
   awaitingAdvance = false;
+  hadMistakeInRound = false;
 
   els.meaning.textContent = w.translation;
   els.pinyinToneless.textContent = w.toneless.join(' ');
@@ -365,6 +764,17 @@ function renderHanziRow(){
 }
 
 function nextWord(){ renderWord(pickWord()); }
+
+function practiceSingleWord(w){
+  closeDict();
+  closeReview();
+  els.topicPillLabel.textContent = topicLabel(currentTopic);
+  lastWordIndex = -1;
+  els.setupSection.style.display = 'none';
+  els.practiceSection.style.display = 'block';
+  if(pad.resize) requestAnimationFrame(pad.resize);
+  renderWord(w);
+}
 
 /* ---------------------------------------------------------------------
    Canvas drawing (single reusable pad — pointer events work for touch + mouse)
@@ -541,7 +951,12 @@ function checkCurrent(){
 
   results[currentIdx] = isRight;
   score.total++;
-  if(isRight) score.correct++;
+  if(isRight){
+    score.correct++;
+  }else{
+    hadMistakeInRound = true;
+    markMistake(wordKey(currentWord));
+  }
   els.scoreVal.textContent = `${score.correct}/${score.total}`;
 
   const isLast = currentIdx === syllables.length - 1;
@@ -556,6 +971,8 @@ function checkCurrent(){
       ? `Correct — tone ${correctTone}.`
       : `That read as tone ${guess}. Correct tone is ${correctTone}.`) + '  Tap Next for another word.';
     els.feedbackLine.className = 'feedback-line ' + (isRight ? 'correct-all' : 'wrong-some');
+
+    if(!hadMistakeInRound) markWordCleanRound(wordKey(currentWord));
 
     awaitingAdvance = true;
     els.checkBtn.disabled = true;
@@ -600,11 +1017,13 @@ function goToSetup(){
 --------------------------------------------------------------------- */
 renderThemeIcons();
 renderAlwaysMeaningToggle();
+renderPracticeUnknownToggle();
 buildShapeReference();
 setupCanvas();
 loadWords();
 
 els.alwaysMeaningToggle.addEventListener('click', ()=> setAlwaysShowMeaning(!alwaysShowMeaning));
+els.practiceUnknownToggle.addEventListener('click', ()=> setPracticeUnknownOnly(!practiceUnknownOnly));
 document.getElementById('themeToggleSetup').addEventListener('click', toggleTheme);
 document.getElementById('themeTogglePractice').addEventListener('click', toggleTheme);
 els.startBtn.addEventListener('click', goToPractice);
@@ -618,3 +1037,41 @@ els.checkBtn.addEventListener('click', checkCurrent);
 els.refBtn.addEventListener('click', ()=> els.modalBackdrop.classList.add('open'));
 els.modalCloseBtn.addEventListener('click', ()=> els.modalBackdrop.classList.remove('open'));
 els.modalBackdrop.addEventListener('click', e=>{ if(e.target === els.modalBackdrop) els.modalBackdrop.classList.remove('open'); });
+
+els.dictBtn.addEventListener('click', openDict);
+els.dictCloseBtn.addEventListener('click', closeDict);
+els.dictOverlay.addEventListener('click', e=>{ if(e.target === els.dictOverlay) closeDict(); });
+els.dictSearch.addEventListener('input', e=>{ dictQuery = e.target.value; renderDict(); });
+els.dictSortSelect.addEventListener('change', e=>{ dictSort = e.target.value; renderDict(); });
+els.dictSortDir.addEventListener('click', ()=>{
+  dictSortAsc = !dictSortAsc;
+  els.dictSortDir.textContent = dictSortAsc ? '↑' : '↓';
+  renderDict();
+});
+els.dictReset.addEventListener('click', ()=>{
+  dictQuery = ''; dictTopic = 'All'; dictSort = 'word'; dictSortAsc = true;
+  els.dictSearch.value = '';
+  els.dictSortSelect.value = 'word';
+  els.dictSortDir.textContent = '↑';
+  buildDictTopics();
+  renderDict();
+});
+
+els.reviewBtn.addEventListener('click', openReview);
+els.reviewCloseBtn.addEventListener('click', closeReview);
+els.reviewOverlay.addEventListener('click', e=>{ if(e.target === els.reviewOverlay) closeReview(); });
+els.reviewSearch.addEventListener('input', e=>{ reviewQuery = e.target.value; renderReview(); });
+els.reviewSortSelect.addEventListener('change', e=>{ reviewSort = e.target.value; renderReview(); });
+els.reviewSortDir.addEventListener('click', ()=>{
+  reviewSortAsc = !reviewSortAsc;
+  els.reviewSortDir.textContent = reviewSortAsc ? '↑' : '↓';
+  renderReview();
+});
+els.reviewReset.addEventListener('click', ()=>{
+  reviewQuery = ''; reviewTopic = 'All'; reviewSort = 'word'; reviewSortAsc = true;
+  els.reviewSearch.value = '';
+  els.reviewSortSelect.value = 'word';
+  els.reviewSortDir.textContent = '↑';
+  buildReviewTopics();
+  renderReview();
+});

@@ -1,0 +1,638 @@
+[
+  {
+    "word": "我爸爸是老师",
+    "pinyin": "Wǒ bàba shì lǎoshī",
+    "notones": "Wo baba shi laoshi",
+    "translation": "My father is a teacher",
+    "hsk": 1,
+    "topic": "family",
+    "type": "sentence"
+  },
+  {
+    "word": "你有几个兄弟姐妹？",
+    "pinyin": "Nǐ yǒu jǐ gè xiōngdì jiěmèi?",
+    "notones": "Ni you ji ge xiongdi jiemei?",
+    "translation": "How many brothers and sisters do you have?",
+    "hsk": 2,
+    "topic": "family",
+    "type": "question"
+  },
+  {
+    "word": "我妈妈喜欢喝茶",
+    "pinyin": "Wǒ māma xǐhuan hē chá",
+    "notones": "Wo mama xihuan he cha",
+    "translation": "My mother likes drinking tea",
+    "hsk": 1,
+    "topic": "family",
+    "type": "sentence"
+  },
+  {
+    "word": "你和爸爸一起住吗？",
+    "pinyin": "Nǐ hé bàba yìqǐ zhù ma?",
+    "notones": "Ni he baba yiqi zhu ma?",
+    "translation": "Do you live with your father?",
+    "hsk": 2,
+    "topic": "family",
+    "type": "question"
+  },
+  {
+    "word": "我家有四个人",
+    "pinyin": "Wǒ jiā yǒu sì gè rén",
+    "notones": "Wo jia you si ge ren",
+    "translation": "There are four people in my family",
+    "hsk": 1,
+    "topic": "family",
+    "type": "sentence"
+  },
+  {
+    "word": "姐姐比我高",
+    "pinyin": "Jiějie bǐ wǒ gāo",
+    "notones": "Jiejie bi wo gao",
+    "translation": "My older sister is taller than me",
+    "hsk": 2,
+    "topic": "family",
+    "type": "sentence"
+  },
+  {
+    "word": "奶奶每天都在家",
+    "pinyin": "Nǎinai měitiān dōu zài jiā",
+    "notones": "Nainai meitian dou zai jia",
+    "translation": "Grandma is at home every day",
+    "hsk": 2,
+    "topic": "family",
+    "type": "sentence"
+  },
+  {
+    "word": "你妈妈今年多大？",
+    "pinyin": "Nǐ māma jīnnián duō dà?",
+    "notones": "Ni mama jinnian duo da?",
+    "translation": "How old is your mother this year?",
+    "hsk": 1,
+    "topic": "family",
+    "type": "question"
+  },
+  {
+    "word": "我哥哥在北京工作",
+    "pinyin": "Wǒ gēge zài Běijīng gōngzuò",
+    "notones": "Wo gege zai Beijing gongzuo",
+    "translation": "My older brother works in Beijing",
+    "hsk": 1,
+    "topic": "family",
+    "type": "sentence"
+  },
+  {
+    "word": "周末我和家人一起吃饭",
+    "pinyin": "Zhōumò wǒ hé jiārén yìqǐ chīfàn",
+    "notones": "Zhoumo wo he jiaren yiqi chifan",
+    "translation": "I eat with my family on weekends",
+    "hsk": 2,
+    "topic": "family",
+    "type": "sentence"
+  },
+
+  {
+    "word": "我想买一件衣服",
+    "pinyin": "Wǒ xiǎng mǎi yí jiàn yīfu",
+    "notones": "Wo xiang mai yi jian yifu",
+    "translation": "I want to buy a piece of clothing",
+    "hsk": 1,
+    "topic": "shopping",
+    "type": "sentence"
+  },
+  {
+    "word": "这个多少钱？",
+    "pinyin": "Zhège duōshao qián?",
+    "notones": "Zhege duoshao qian?",
+    "translation": "How much is this?",
+    "hsk": 1,
+    "topic": "shopping",
+    "type": "question"
+  },
+  {
+    "word": "你喜欢哪件衣服？",
+    "pinyin": "Nǐ xǐhuan nǎ jiàn yīfu?",
+    "notones": "Ni xihuan na jian yifu?",
+    "translation": "Which piece of clothing do you like?",
+    "hsk": 1,
+    "topic": "shopping",
+    "type": "question"
+  },
+  {
+    "word": "这件衣服太贵了",
+    "pinyin": "Zhè jiàn yīfu tài guì le",
+    "notones": "Zhe jian yifu tai gui le",
+    "translation": "This piece of clothing is too expensive",
+    "hsk": 2,
+    "topic": "shopping",
+    "type": "sentence"
+  },
+  {
+    "word": "我可以买两个吗？",
+    "pinyin": "Wǒ kěyǐ mǎi liǎng gè ma?",
+    "notones": "Wo keyi mai liang ge ma?",
+    "translation": "Can I buy two?",
+    "hsk": 2,
+    "topic": "shopping",
+    "type": "question"
+  },
+  {
+    "word": "你要买什么？",
+    "pinyin": "Nǐ yào mǎi shénme?",
+    "notones": "Ni yao mai shenme?",
+    "translation": "What do you want to buy?",
+    "hsk": 1,
+    "topic": "shopping",
+    "type": "question"
+  },
+  {
+    "word": "这双鞋很好看",
+    "pinyin": "Zhè shuāng xié hěn hǎokàn",
+    "notones": "Zhe shuang xie hen haokan",
+    "translation": "These shoes look very nice",
+    "hsk": 2,
+    "topic": "shopping",
+    "type": "sentence"
+  },
+  {
+    "word": "商店几点开门？",
+    "pinyin": "Shāngdiàn jǐ diǎn kāimén?",
+    "notones": "Shangdian ji dian kaimen?",
+    "translation": "What time does the shop open?",
+    "hsk": 2,
+    "topic": "shopping",
+    "type": "question"
+  },
+  {
+    "word": "我想买一个新的手机",
+    "pinyin": "Wǒ xiǎng mǎi yí gè xīn de shǒujī",
+    "notones": "Wo xiang mai yi ge xin de shouji",
+    "translation": "I want to buy a new phone",
+    "hsk": 2,
+    "topic": "shopping",
+    "type": "sentence"
+  },
+  {
+    "word": "可以便宜一点吗？",
+    "pinyin": "Kěyǐ piányi yìdiǎn ma?",
+    "notones": "Keyi pianyi yidian ma?",
+    "translation": "Can it be a little cheaper?",
+    "hsk": 2,
+    "topic": "shopping",
+    "type": "question"
+  },
+
+  {
+    "word": "我喜欢吃中国菜",
+    "pinyin": "Wǒ xǐhuan chī Zhōngguó cài",
+    "notones": "Wo xihuan chi Zhongguo cai",
+    "translation": "I like eating Chinese food",
+    "hsk": 1,
+    "topic": "food",
+    "type": "sentence"
+  },
+  {
+    "word": "你想吃什么？",
+    "pinyin": "Nǐ xiǎng chī shénme?",
+    "notones": "Ni xiang chi shenme?",
+    "translation": "What do you want to eat?",
+    "hsk": 1,
+    "topic": "food",
+    "type": "question"
+  },
+  {
+    "word": "我每天早上喝牛奶",
+    "pinyin": "Wǒ měitiān zǎoshang hē niúnǎi",
+    "notones": "Wo meitian zaoshang he niunai",
+    "translation": "I drink milk every morning",
+    "hsk": 1,
+    "topic": "food",
+    "type": "sentence"
+  },
+  {
+    "word": "这个苹果甜吗？",
+    "pinyin": "Zhège píngguǒ tián ma?",
+    "notones": "Zhege pingguo tian ma?",
+    "translation": "Is this apple sweet?",
+    "hsk": 2,
+    "topic": "food",
+    "type": "question"
+  },
+  {
+    "word": "我不喜欢吃鱼",
+    "pinyin": "Wǒ bù xǐhuan chī yú",
+    "notones": "Wo bu xihuan chi yu",
+    "translation": "I don't like eating fish",
+    "hsk": 1,
+    "topic": "food",
+    "type": "sentence"
+  },
+  {
+    "word": "你吃过中国菜吗？",
+    "pinyin": "Nǐ chīguo Zhōngguó cài ma?",
+    "notones": "Ni chiguo Zhongguo cai ma?",
+    "translation": "Have you eaten Chinese food before?",
+    "hsk": 2,
+    "topic": "food",
+    "type": "question"
+  },
+  {
+    "word": "今天晚上我们吃面条",
+    "pinyin": "Jīntiān wǎnshang wǒmen chī miàntiáo",
+    "notones": "Jintian wanshang women chi miantiao",
+    "translation": "Tonight we will eat noodles",
+    "hsk": 2,
+    "topic": "food",
+    "type": "sentence"
+  },
+  {
+    "word": "你要喝茶还是喝咖啡？",
+    "pinyin": "Nǐ yào hē chá háishi hē kāfēi?",
+    "notones": "Ni yao he cha haishi he kafei?",
+    "translation": "Do you want tea or coffee?",
+    "hsk": 2,
+    "topic": "food",
+    "type": "question"
+  },
+  {
+    "word": "这家饭店的菜很好吃",
+    "pinyin": "Zhè jiā fàndiàn de cài hěn hǎochī",
+    "notones": "Zhe jia fandian de cai hen haochi",
+    "translation": "The food at this restaurant is delicious",
+    "hsk": 2,
+    "topic": "food",
+    "type": "sentence"
+  },
+  {
+    "word": "你吃饱了吗？",
+    "pinyin": "Nǐ chī bǎo le ma?",
+    "notones": "Ni chi bao le ma?",
+    "translation": "Are you full?",
+    "hsk": 2,
+    "topic": "food",
+    "type": "question"
+  },
+
+  {
+    "word": "银行在哪里？",
+    "pinyin": "Yínháng zài nǎlǐ?",
+    "notones": "Yinhang zai nali?",
+    "translation": "Where is the bank?",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "question"
+  },
+  {
+    "word": "学校在商店旁边",
+    "pinyin": "Xuéxiào zài shāngdiàn pángbiān",
+    "notones": "Xuexiao zai shangdian pangbian",
+    "translation": "The school is next to the shop",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "sentence"
+  },
+  {
+    "word": "请问，厕所在哪里？",
+    "pinyin": "Qǐngwèn, cèsuǒ zài nǎlǐ?",
+    "notones": "Qingwen, cesuo zai nali?",
+    "translation": "Excuse me, where is the toilet?",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "question"
+  },
+  {
+    "word": "从这里到学校怎么走？",
+    "pinyin": "Cóng zhèlǐ dào xuéxiào zěnme zǒu?",
+    "notones": "Cong zheli dao xuexiao zenme zou?",
+    "translation": "How do I get from here to the school?",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "question"
+  },
+  {
+    "word": "一直往前走",
+    "pinyin": "Yìzhí wǎng qián zǒu",
+    "notones": "Yizhi wang qian zou",
+    "translation": "Go straight ahead",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "sentence"
+  },
+  {
+    "word": "医院在银行的后面",
+    "pinyin": "Yīyuàn zài yínháng de hòumiàn",
+    "notones": "Yiyuan zai yinhang de houmian",
+    "translation": "The hospital is behind the bank",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "sentence"
+  },
+  {
+    "word": "你知道火车站在哪里吗？",
+    "pinyin": "Nǐ zhīdào huǒchēzhàn zài nǎlǐ ma?",
+    "notones": "Ni zhidao huochezhan zai nali ma?",
+    "translation": "Do you know where the train station is?",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "question"
+  },
+  {
+    "word": "电影院在学校的左边",
+    "pinyin": "Diànyǐngyuàn zài xuéxiào de zuǒbian",
+    "notones": "Dianyingyuan zai xuexiao de zuobian",
+    "translation": "The cinema is to the left of the school",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "sentence"
+  },
+  {
+    "word": "到车站要多长时间？",
+    "pinyin": "Dào chēzhàn yào duō cháng shíjiān?",
+    "notones": "Dao chezhan yao duo chang shijian?",
+    "translation": "How long does it take to get to the station?",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "question"
+  },
+  {
+    "word": "超市在我家附近",
+    "pinyin": "Chāoshì zài wǒ jiā fùjìn",
+    "notones": "Chaoshi zai wo jia fujin",
+    "translation": "The supermarket is near my home",
+    "hsk": 2,
+    "topic": "directions",
+    "type": "sentence"
+  },
+
+  {
+    "word": "我每天去学校",
+    "pinyin": "Wǒ měitiān qù xuéxiào",
+    "notones": "Wo meitian qu xuexiao",
+    "translation": "I go to school every day",
+    "hsk": 1,
+    "topic": "school",
+    "type": "sentence"
+  },
+  {
+    "word": "你喜欢你的老师吗？",
+    "pinyin": "Nǐ xǐhuan nǐ de lǎoshī ma?",
+    "notones": "Ni xihuan ni de laoshi ma?",
+    "translation": "Do you like your teacher?",
+    "hsk": 1,
+    "topic": "school",
+    "type": "question"
+  },
+  {
+    "word": "我的学校很大",
+    "pinyin": "Wǒ de xuéxiào hěn dà",
+    "notones": "Wo de xuexiao hen da",
+    "translation": "My school is very big",
+    "hsk": 1,
+    "topic": "school",
+    "type": "sentence"
+  },
+  {
+    "word": "你几点上课？",
+    "pinyin": "Nǐ jǐ diǎn shàngkè?",
+    "notones": "Ni ji dian shangke?",
+    "translation": "What time do your classes start?",
+    "hsk": 1,
+    "topic": "school",
+    "type": "question"
+  },
+  {
+    "word": "我喜欢学习汉语",
+    "pinyin": "Wǒ xǐhuan xuéxí Hànyǔ",
+    "notones": "Wo xihuan xuexi Hanyu",
+    "translation": "I like studying Chinese",
+    "hsk": 1,
+    "topic": "school",
+    "type": "sentence"
+  },
+  {
+    "word": "今天我们有数学课",
+    "pinyin": "Jīntiān wǒmen yǒu shùxué kè",
+    "notones": "Jintian women you shuxue ke",
+    "translation": "We have a math class today",
+    "hsk": 2,
+    "topic": "school",
+    "type": "sentence"
+  },
+  {
+    "word": "你每天学习多长时间？",
+    "pinyin": "Nǐ měitiān xuéxí duō cháng shíjiān?",
+    "notones": "Ni meitian xuexi duo chang shijian?",
+    "translation": "How long do you study every day?",
+    "hsk": 2,
+    "topic": "school",
+    "type": "question"
+  },
+  {
+    "word": "我的同学都很好",
+    "pinyin": "Wǒ de tóngxué dōu hěn hǎo",
+    "notones": "Wo de tongxue dou hen hao",
+    "translation": "All my classmates are very nice",
+    "hsk": 2,
+    "topic": "school",
+    "type": "sentence"
+  },
+  {
+    "word": "你做完作业了吗？",
+    "pinyin": "Nǐ zuòwán zuòyè le ma?",
+    "notones": "Ni zuowan zuoye le ma?",
+    "translation": "Have you finished your homework?",
+    "hsk": 2,
+    "topic": "school",
+    "type": "question"
+  },
+  {
+    "word": "老师让我明天早点来",
+    "pinyin": "Lǎoshī ràng wǒ míngtiān zǎodiǎn lái",
+    "notones": "Laoshi rang wo mingtian zaodian lai",
+    "translation": "The teacher asked me to come earlier tomorrow",
+    "hsk": 2,
+    "topic": "school",
+    "type": "sentence"
+  },
+
+  {
+    "word": "我每天坐公共汽车上班",
+    "pinyin": "Wǒ měitiān zuò gōnggòng qìchē shàngbān",
+    "notones": "Wo meitian zuo gonggong qiche shangban",
+    "translation": "I take the bus to work every day",
+    "hsk": 2,
+    "topic": "transport",
+    "type": "sentence"
+  },
+  {
+    "word": "你怎么去学校？",
+    "pinyin": "Nǐ zěnme qù xuéxiào?",
+    "notones": "Ni zenme qu xuexiao?",
+    "translation": "How do you go to school?",
+    "hsk": 1,
+    "topic": "transport",
+    "type": "question"
+  },
+  {
+    "word": "我坐地铁去市中心",
+    "pinyin": "Wǒ zuò dìtiě qù shì zhōngxīn",
+    "notones": "Wo zuo ditie qu shi zhongxin",
+    "translation": "I take the subway to the city center",
+    "hsk": 2,
+    "topic": "transport",
+    "type": "sentence"
+  },
+  {
+    "word": "火车几点到？",
+    "pinyin": "Huǒchē jǐ diǎn dào?",
+    "notones": "Huoche ji dian dao?",
+    "translation": "What time does the train arrive?",
+    "hsk": 2,
+    "topic": "transport",
+    "type": "question"
+  },
+  {
+    "word": "我喜欢骑自行车",
+    "pinyin": "Wǒ xǐhuan qí zìxíngchē",
+    "notones": "Wo xihuan qi zixingche",
+    "translation": "I like riding a bicycle",
+    "hsk": 2,
+    "topic": "transport",
+    "type": "sentence"
+  },
+  {
+    "word": "从这里坐车要多久？",
+    "pinyin": "Cóng zhèlǐ zuò chē yào duō jiǔ?",
+    "notones": "Cong zheli zuo che yao duo jiu?",
+    "translation": "How long does it take to get there by car from here?",
+    "hsk": 2,
+    "topic": "transport",
+    "type": "question"
+  },
+  {
+    "word": "机场离这里很远",
+    "pinyin": "Jīchǎng lí zhèlǐ hěn yuǎn",
+    "notones": "Jichang li zheli hen yuan",
+    "translation": "The airport is very far from here",
+    "hsk": 2,
+    "topic": "transport",
+    "type": "sentence"
+  },
+  {
+    "word": "你要坐出租车吗？",
+    "pinyin": "Nǐ yào zuò chūzūchē ma?",
+    "notones": "Ni yao zuo chuzuche ma?",
+    "translation": "Do you want to take a taxi?",
+    "hsk": 2,
+    "topic": "transport",
+    "type": "question"
+  },
+  {
+    "word": "今天路上人很多",
+    "pinyin": "Jīntiān lùshang rén hěn duō",
+    "notones": "Jintian lushang ren hen duo",
+    "translation": "There are many people on the road today",
+    "hsk": 2,
+    "topic": "transport",
+    "type": "sentence"
+  },
+  {
+    "word": "我没有车，所以坐公交车",
+    "pinyin": "Wǒ méiyǒu chē, suǒyǐ zuò gōngjiāo chē",
+    "notones": "Wo meiyou che, suoyi zuo gongjiao che",
+    "translation": "I don't have a car, so I take the bus",
+    "hsk": 2,
+    "topic": "transport",
+    "type": "sentence"
+  },
+
+  {
+    "word": "我喜欢听音乐",
+    "pinyin": "Wǒ xǐhuan tīng yīnyuè",
+    "notones": "Wo xihuan ting yinyue",
+    "translation": "I like listening to music",
+    "hsk": 1,
+    "topic": "free time",
+    "type": "sentence"
+  },
+  {
+    "word": "你周末喜欢做什么？",
+    "pinyin": "Nǐ zhōumò xǐhuan zuò shénme?",
+    "notones": "Ni zhoumo xihuan zuo shenme?",
+    "translation": "What do you like to do on weekends?",
+    "hsk": 2,
+    "topic": "free time",
+    "type": "question"
+  },
+  {
+    "word": "我晚上喜欢看电视",
+    "pinyin": "Wǒ wǎnshang xǐhuan kàn diànshì",
+    "notones": "Wo wanshang xihuan kan dianshi",
+    "translation": "I like watching TV in the evening",
+    "hsk": 1,
+    "topic": "free time",
+    "type": "sentence"
+  },
+  {
+    "word": "你喜欢看电影吗？",
+    "pinyin": "Nǐ xǐhuan kàn diànyǐng ma?",
+    "notones": "Ni xihuan kan dianying ma?",
+    "translation": "Do you like watching movies?",
+    "hsk": 1,
+    "topic": "free time",
+    "type": "question"
+  },
+  {
+    "word": "我常常和朋友一起出去玩",
+    "pinyin": "Wǒ chángcháng hé péngyou yìqǐ chūqù wán",
+    "notones": "Wo changchang he pengyou yiqi chuqu wan",
+    "translation": "I often go out and have fun with my friends",
+    "hsk": 2,
+    "topic": "free time",
+    "type": "sentence"
+  },
+  {
+    "word": "你会游泳吗？",
+    "pinyin": "Nǐ huì yóuyǒng ma?",
+    "notones": "Ni hui youyong ma?",
+    "translation": "Can you swim?",
+    "hsk": 1,
+    "topic": "free time",
+    "type": "question"
+  },
+  {
+    "word": "我喜欢在公园里走走",
+    "pinyin": "Wǒ xǐhuan zài gōngyuán lǐ zǒuzou",
+    "notones": "Wo xihuan zai gongyuan li zouzou",
+    "translation": "I like taking walks in the park",
+    "hsk": 2,
+    "topic": "free time",
+    "type": "sentence"
+  },
+  {
+    "word": "昨天我在家看了一本书",
+    "pinyin": "Zuótiān wǒ zài jiā kàn le yì běn shū",
+    "notones": "Zuotian wo zai jia kan le yi ben shu",
+    "translation": "Yesterday I read a book at home",
+    "hsk": 2,
+    "topic": "free time",
+    "type": "sentence"
+  },
+  {
+    "word": "你喜欢运动还是看书？",
+    "pinyin": "Nǐ xǐhuan yùndòng háishi kàn shū?",
+    "notones": "Ni xihuan yundong haishi kan shu?",
+    "translation": "Do you like exercising or reading?",
+    "hsk": 2,
+    "topic": "free time",
+    "type": "question"
+  },
+  {
+    "word": "星期六我喜欢和朋友喝咖啡",
+    "pinyin": "Xīngqīliù wǒ xǐhuan hé péngyou hē kāfēi",
+    "notones": "Xingqiliu wo xihuan he pengyou he kafei",
+    "translation": "On Saturdays, I like drinking coffee with friends",
+    "hsk": 2,
+    "topic": "free time",
+    "type": "sentence"
+  }
+]

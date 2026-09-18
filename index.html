@@ -20,7 +20,16 @@
   <section id="setup">
     <div class="topbar">
       <span class="title">Tone Draw</span>
-      <button class="iconbtn" id="themeToggleSetup" aria-label="Toggle theme"></button>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <button class="iconbtn" id="reviewBtn" aria-label="Words to review">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M5 3v14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 3.8c1.2-.8 2.6-.8 4 0s2.8.8 4 0v6c-1.2.8-2.6.8-4 0s-2.8-.8-4 0V3.8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span class="badge-count" id="reviewBadge"></span>
+        </button>
+        <button class="iconbtn" id="dictBtn" aria-label="Open dictionary">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 4.5c0-.55.45-1 1-1h4.2c.72 0 1.4.3 1.8.83.4-.52 1.08-.83 1.8-.83H17c.55 0 1 .45 1 1V15a1 1 0 01-1 1h-4.6c-.5 0-.98.2-1.33.55l-.07.07a1 1 0 01-1.4 0l-.07-.07A1.87 1.87 0 008.6 16H4a1 1 0 01-1-1V4.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 4.8V16" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <button class="iconbtn" id="themeToggleSetup" aria-label="Toggle theme"></button>
+      </div>
     </div>
 
     <div class="setup-hero">
@@ -28,9 +37,17 @@
       <p>See a word, draw its pitch contour, check yourself.</p>
     </div>
 
+    <div class="wordlist-row">
+      <div class="wordlist-info">
+        <span class="name" id="wordlistName">Loading…</span>
+        <span class="sub" id="wordlistSub"></span>
+      </div>
+      <button class="wordlist-btn" id="chooseFileBtn" type="button">Choose file…</button>
+      <input type="file" id="fileInput" accept=".json,application/json" hidden>
+    </div>
+
     <div id="loadFallback" class="load-fallback" style="display:none;">
-      <p>words.json couldn't be loaded automatically — this happens when opening this file directly instead of through a local server. Select it manually:</p>
-      <input type="file" id="fileInput" accept="application/json">
+      <p>words.json couldn't be loaded automatically — this happens when opening this file directly instead of through a local server. Choose a JSON word list above to get started.</p>
     </div>
 
     <div class="section-label">Choose a topic</div>
@@ -39,6 +56,13 @@
     <div class="pref-row">
       <span>Always show meaning</span>
       <button class="switch" id="alwaysMeaningToggle" role="switch" aria-checked="false" aria-label="Always show meaning">
+        <span class="knob"></span>
+      </button>
+    </div>
+
+    <div class="pref-row">
+      <span>Only practice words I don't know</span>
+      <button class="switch" id="practiceUnknownToggle" role="switch" aria-checked="false" aria-label="Only practice words I don't know">
         <span class="knob"></span>
       </button>
     </div>
@@ -91,6 +115,54 @@
     <div class="sub">Draw left to right · bottom = low pitch, top = high pitch</div>
     <div id="shapeList"></div>
     <button class="modal-close" id="modalCloseBtn">Close</button>
+  </div>
+</div>
+
+<div class="dict-overlay" id="dictOverlay">
+  <div class="dict-sheet">
+    <div class="dict-header">
+      <h2>Dictionary</h2>
+      <button class="iconbtn" id="dictCloseBtn" aria-label="Close dictionary">✕</button>
+    </div>
+    <input type="text" id="dictSearch" class="dict-search" placeholder="Search word, pinyin, or meaning…" />
+    <div class="chips" id="dictTopics"></div>
+    <div class="dict-sort-row">
+      <select id="dictSortSelect" class="dict-sort-select">
+        <option value="word">Sort: Character</option>
+        <option value="pinyin">Sort: Pinyin</option>
+        <option value="translation">Sort: Meaning</option>
+        <option value="tone">Group: Tone pattern</option>
+        <option value="type">Group: Word type</option>
+      </select>
+      <button class="dict-sort-dir" id="dictSortDir" aria-label="Toggle sort direction">↑</button>
+      <button class="dict-reset" id="dictReset">Reset</button>
+    </div>
+    <div class="dict-summary" id="dictSummary"></div>
+    <div class="dict-list" id="dictList"></div>
+  </div>
+</div>
+
+<div class="dict-overlay" id="reviewOverlay">
+  <div class="dict-sheet">
+    <div class="dict-header">
+      <h2>Words to review</h2>
+      <button class="iconbtn" id="reviewCloseBtn" aria-label="Close review list">✕</button>
+    </div>
+    <input type="text" id="reviewSearch" class="dict-search" placeholder="Search word, pinyin, or meaning…" />
+    <div class="chips" id="reviewTopics"></div>
+    <div class="dict-sort-row">
+      <select id="reviewSortSelect" class="dict-sort-select">
+        <option value="word">Sort: Character</option>
+        <option value="pinyin">Sort: Pinyin</option>
+        <option value="translation">Sort: Meaning</option>
+        <option value="tone">Group: Tone pattern</option>
+        <option value="type">Group: Word type</option>
+      </select>
+      <button class="dict-sort-dir" id="reviewSortDir" aria-label="Toggle sort direction">↑</button>
+      <button class="dict-reset" id="reviewReset">Reset</button>
+    </div>
+    <div class="dict-summary" id="reviewSummary"></div>
+    <div class="dict-list" id="reviewList"></div>
   </div>
 </div>
 <script src="script.js"></script>
