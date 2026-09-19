@@ -137,19 +137,35 @@ function splitConcatenatedPinyin(pinyinRaw, count){
   return null;
 }
 
+/* Punctuation — periods, commas, question/exclamation marks, quotes,
+   parentheses, and their full-width Chinese equivalents (。，？！...) —
+   is never something to draw a tone for. \p{P}/\p{S} (Unicode
+   "Punctuation" and "Symbol" categories) covers both ASCII and CJK
+   punctuation without needing a hand-maintained character list. */
+function isPunctuationChar(ch){
+  return /^[\p{P}\p{S}]$/u.test(ch);
+}
+function stripPunctuation(s){
+  return (s || "").replace(/[\p{P}\p{S}]/gu, ' ');
+}
+
 function toEntry(raw){
-  const chars = Array.from(raw.word || "");
-  let syllables = (raw.pinyin || "").trim().split(/\s+/).filter(Boolean);
-  if(syllables.length !== chars.length){
+  const displayChars = Array.from(raw.word || "");
+  const checkableChars = displayChars.filter(c => !isPunctuationChar(c));
+  const cleanedPinyin = stripPunctuation(raw.pinyin);
+
+  let syllables = cleanedPinyin.trim().split(/\s+/).filter(Boolean);
+  if(syllables.length !== checkableChars.length){
     // Pinyin wasn't space-separated per character — try to split the
     // concatenated pinyin into one valid syllable per character.
-    const attempt = chars.length > 1 ? splitConcatenatedPinyin(raw.pinyin, chars.length) : null;
+    const attempt = checkableChars.length > 1 ? splitConcatenatedPinyin(cleanedPinyin, checkableChars.length) : null;
     // Fall back to treating the whole thing as one syllable only if
     // splitting genuinely isn't possible.
-    syllables = attempt || [(raw.pinyin || "").trim()];
+    syllables = attempt || [cleanedPinyin.trim()];
   }
   const entry = {
     word: raw.word || "",
+    displayChars,
     syllables,
     translation: raw.translation || "",
     topic: raw.topic || "other",
@@ -159,6 +175,7 @@ function toEntry(raw){
   entry.toneless = entry.syllables.map(stripTone);
   return entry;
 }
+
 
 
 async function loadWords(){
@@ -753,8 +770,12 @@ function renderWord(w){
 }
 
 function renderHanziRow(){
-  const chars = Array.from(currentWord.word);
-  els.hanzi.innerHTML = chars.map((c,i)=>{
+  let ci = 0; // index into results/syllables — punctuation doesn't get one
+  els.hanzi.innerHTML = currentWord.displayChars.map(c=>{
+    if(isPunctuationChar(c)){
+      return `<span class="hz punct">${escapeHtml(c)}</span>`;
+    }
+    const i = ci++;
     let cls = 'hz';
     if(results[i] === true) cls += ' right';
     else if(results[i] === false) cls += ' wrong';

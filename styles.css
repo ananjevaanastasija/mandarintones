@@ -148,6 +148,7 @@
   .hanzi .hz.current{ color:var(--text); border-bottom:3px solid var(--accent); }
   .hanzi .hz.right{ color:var(--success); }
   .hanzi .hz.wrong{ color:var(--danger); }
+  .hanzi .hz.punct{ color:var(--text-secondary); opacity:.55; }
 
   .pinyin-toneless{
     text-align:center; font-size:16px; letter-spacing:.18em; color:var(--text-secondary);
@@ -239,7 +240,24 @@
     background:var(--card-2); color:var(--text); font-family:var(--font); font-size:14.5px; margin-bottom:12px;
   }
   .dict-search:focus{ outline:none; border-color:var(--accent); }
-  #dictTopics{ margin-bottom:12px; }
+  #dictTopics {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 8px;
+  margin-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  }
+
+  #dictTopics::-webkit-scrollbar {
+    display: none;
+  }
+
+  #dictTopics > * {
+    flex-shrink: 0;
+  }
   .dict-sort-row{ display:flex; gap:8px; margin-bottom:10px; }
   .dict-sort-select{
     flex:1; min-width:0; padding:9px 10px; border-radius:var(--radius-sm); border:1px solid var(--border);
@@ -260,7 +278,7 @@
     cursor:pointer;
   }
   .dict-row:active{ background:var(--card-2); }
-  .dict-char{ font-size:26px; font-weight:700; flex-shrink:0; width:44px; text-align:center; }
+  .dict-char{ font-size:14px; font-weight:700; flex-shrink:0; width:100px; text-align:left; }
   .dict-main{ flex:1; min-width:0; }
   .dict-pinyin{ font-size:14px; font-weight:600; color:var(--text); }
   .dict-trans{ font-size:12.5px; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
